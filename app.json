@@ -50,6 +50,12 @@
         "projectId": "7241d0dd-b624-48f1-beb7-fd8be0a5a4d7"
       }
     },
-    "owner": "fedal_dev"
+    "owner": "fedal_dev",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/7241d0dd-b624-48f1-beb7-fd8be0a5a4d7"
+    }
   }
 }
