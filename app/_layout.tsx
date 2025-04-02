@@ -1,39 +1,55 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { Stack } from "expo-router";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+const HeaderLogout = () => {
+  const { user, logout } = useAuth();
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+  return user ? (
+    <TouchableOpacity onPress={logout} style={styles.logoutBtn}>
+      <Text style={styles.logoutText}>Logout</Text>
+    </TouchableOpacity>
+  ) : null;
 }
+
+const RootLayout = () => {
+  return ( 
+    <AuthProvider>
+        <Stack 
+              screenOptions={{
+                headerStyle: {
+                  backgroundColor: '#ff8c00',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                  fontSize: 20
+                },
+                contentStyle: {
+                  backgroundColor: '#fff',
+                  paddingHorizontal: 10,
+                  paddingTop: 10,
+                },
+                headerRight: () => <HeaderLogout />
+              }}
+          >
+          <Stack.Screen name='index' options={{ title: 'Home'}} />
+          <Stack.Screen name='notes' options={{ title: 'Notes'}} />
+          <Stack.Screen name='auth' options={{ title: 'Login'}} />
+          </Stack>
+      </AuthProvider>
+  )
+}
+
+const styles = StyleSheet.create({
+  logoutBtn: {
+    padding: 10,
+    backgroundColor: 'red',
+    borderRadius: 5,
+  },
+  logoutText: {
+    color: '#fff',
+  }
+})
+
+export default RootLayout;
